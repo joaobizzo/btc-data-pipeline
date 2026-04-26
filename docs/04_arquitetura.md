@@ -1,3 +1,5 @@
+
+```mermaid
 graph TD
 
     subgraph Fontes de Dados
@@ -42,3 +44,4 @@ graph TD
 
     C3 --> E1
     C3 --> E2
+```
