@@ -1,6 +1,6 @@
 ## 📌 Nome do Projeto
 
-**Crypto Data Pipeline – Monitoramento Inteligente de Preços de Bitcoin**
+**Btc Data Pipeline – Monitoramento Inteligente de Preços de Bitcoin**
 
 * * *
 
