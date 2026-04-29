@@ -1,4 +1,4 @@
-## 📌 Nome do Projeto
+## Nome do Projeto
 
 **Btc Data Pipeline – Monitoramento Inteligente de Preços de Bitcoin**
 
