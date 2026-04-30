@@ -129,9 +129,7 @@ Dados coletados continuamente para atualização recente do sistema.
 
 ### Frequência planejada
 
-* 2 horas → última semana
-* 4 horas → último mês
-* diário → histórico antigo
+* 2 horas → 12 entadas por dia
 
 ### Objetivo
 
