@@ -3,8 +3,8 @@
 graph TD
 
     subgraph Fontes de Dados
-        A1[API Bitcoin USD]
-        A2[API USD/BRL]
+        A1[API Histórico Bitcoin USD/BRL]
+        A2[API Bitcoin Tempo real USD/BRL]
     end
 
     subgraph Ingestão
