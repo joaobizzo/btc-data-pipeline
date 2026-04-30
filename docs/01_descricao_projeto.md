@@ -2,15 +2,19 @@
 
 **Btc Data Pipeline – Monitoramento Inteligente de Preços de Bitcoin**
 
+### Alunos : 
+- **João Bizzo - 22252028**
+- **Pietra Paz - RA**
+
 * * *
 
-## 📖 Contexto
+## Contexto
 
 O mercado de criptomoedas é altamente volátil, exigindo monitoramento constante por parte de investidores. No entanto, muitas soluções disponíveis não oferecem um equilíbrio adequado entre granularidade recente e eficiência no armazenamento histórico.
 
 * * *
 
-## ❗ Problema
+## Problema
 
 Investidores precisam visualizar:
 
@@ -21,7 +25,7 @@ Mas armazenar todos os dados com alta frequência gera alto custo e complexidade
 
 * * *
 
-## 🎯 Objetivo
+## Objetivo
 
 Desenvolver um pipeline de dados que:
 
@@ -35,8 +39,7 @@ Desenvolver um pipeline de dados que:
 -   disponibilize dados para análise e visualização
 * * *
 
-## 👥 Stakeholders
+## Stakeholders
 
 -   Investidores individuais
--   Usuários da aplicação de portfólio
 -   Desenvolvedores de sistemas financeiros
