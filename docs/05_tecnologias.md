@@ -1,4 +1,4 @@
-## 🔧 Ingestão
+## Ingestão
 
 Python + requests
 ✔ simples e leve
@@ -6,7 +6,7 @@ Python + requests
 
 * * *
 
-## 🗃️ Armazenamento
+## Armazenamento
 
 PostgreSQL
 ✔ suporta séries temporais
@@ -14,7 +14,7 @@ PostgreSQL
 
 * * *
 
-## 🔄 Processamento
+## Processamento
 
 Pandas / dbt
 ✔ transformação simples
@@ -22,7 +22,7 @@ Pandas / dbt
 
 * * *
 
-## ⏱️ Orquestração
+## Orquestração
 
 Airflow
 ✔ agendamento
@@ -30,7 +30,7 @@ Airflow
 
 * * *
 
-## 📊 Consumo
+## Consumo
 
 Metabase
 ✔ dashboards rápidos
