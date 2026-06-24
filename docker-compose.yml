@@ -113,6 +113,7 @@ services:
       - COINGECKO_BASE_URL=${COINGECKO_BASE_URL:-https://api.coingecko.com/api/v3}
       - COINGECKO_API_KEY=${COINGECKO_API_KEY}
       - DBT_PROFILES_DIR=/app/dbt_project
+      - PYTHONPATH=/app
     volumes:
       - ./src:/app/src
       - ./dbt_project:/app/dbt_project
