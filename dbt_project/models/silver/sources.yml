@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: bronze_sources
+    schema: bronze
+    tables:
+      - name: raw_realtime
+        description: "Payloads JSON crus contendo a cotação em tempo real (obtida a cada 5 min)."
+      - name: raw_historical
+        description: "Payloads JSON crus contendo séries históricas longas de preços de Bitcoin obtidas para backfill."

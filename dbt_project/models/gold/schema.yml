@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: prices_aggregated_2h
+    description: "Visão consolidada de cotações com granularidade de 2 horas (recomendado para análises recentes de até uma semana)."
+    columns:
+      - name: interval_timestamp
+        description: "Início da janela temporal de 2 horas."
+        tests:
+          - unique
+          - not_null
+      - name: avg_btc_usd
+        description: "Média do preço do Bitcoin em USD na janela."
+        tests:
+          - not_null
+      - name: avg_btc_brl
+        description: "Média do preço do Bitcoin em BRL na janela."
+        tests:
+          - not_null
+      - name: avg_usd_brl
+        description: "Média da taxa de câmbio implícita na janela."
+        tests:
+          - not_null
+
+  - name: prices_aggregated_4h
+    description: "Visão consolidada de cotações com granularidade de 4 horas (recomendado para análises de médio prazo de até um mês)."
+    columns:
+      - name: interval_timestamp
+        description: "Início da janela temporal de 4 horas."
+        tests:
+          - unique
+          - not_null
+      - name: avg_btc_usd
+        description: "Média do preço do Bitcoin em USD na janela."
+        tests:
+          - not_null
+      - name: avg_btc_brl
+        description: "Média do preço do Bitcoin em BRL na janela."
+        tests:
+          - not_null
+      - name: avg_usd_brl
+        description: "Média da taxa de câmbio implícita na janela."
+        tests:
+          - not_null
+
+  - name: prices_aggregated_daily
+    description: "Visão consolidada de cotações com granularidade diária (recomendado para análises históricas de longo prazo)."
+    columns:
+      - name: interval_timestamp
+        description: "Dia correspondente aos registros agregados."
+        tests:
+          - unique
+          - not_null
+      - name: avg_btc_usd
+        description: "Média do preço do Bitcoin em USD na janela diária."
+        tests:
+          - not_null
+      - name: avg_btc_brl
+        description: "Média do preço do Bitcoin em BRL na janela diária."
+        tests:
+          - not_null
+      - name: avg_usd_brl
+        description: "Média da taxa de câmbio implícita na janela diária."
+        tests:
+          - not_null

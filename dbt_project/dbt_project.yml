@@ -1,0 +1,28 @@
+name: 'btc_project'
+version: '1.0.0'
+config-version: 2
+
+# Associa este projeto ao perfil definido no profiles.yml
+profile: 'btc_project_profile'
+
+# Configuração de caminhos de diretório
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Configuração de materialização e esquemas de banco por pasta
+models:
+  btc_project:
+    silver:
+      +schema: silver      # Será gravado no schema 'silver'
+      +materialized: table # Materializa como tabela física para performance de séries temporais
+    gold:
+      +schema: gold        # Será gravado no schema 'gold'
+      +materialized: table

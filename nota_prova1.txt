@@ -1,0 +1,37 @@
+- Definição do escopo e dados
+
+— Critério: Clareza na definição do projeto, identificação e classificação dos dados (operacionais vs. streaming).
+
+— Nota: 2,0/2,0
+
+- Domínios e serviços
+
+— Critério: Identificação coerente dos domínios de negócio e dos serviços envolvidos.
+
+— Nota: 1,5/2,0
+
+— Observações: geralmente os domínios se relacionam aos domínios de negócio e do conhecimento e não etapas de negócio. Seria colocar mais informação na sua arquitetura. 
+
+- Arquitetura e fluxo de dados
+
+— Critério: Diagrama e descrição do fluxo (o que será feito), alinhado aos princípios vistos em aula.
+
+— Nota: 1,0/2,0
+
+— Observação: arquitetura organizada, mas faltou monitoramento, governança e qualidade e só focou no caminho feliz. Faltou retroalimentações. 
+
+- Tecnologias (como será feito)
+
+— Critério: Detalhamento e justificativa das tecnologias escolhidas em cada etapa do ciclo de vida.
+
+— Nota: 1,0/2,0
+
+— Observação: faltou justificar mais as escolhas das tecnologias. Faltou informar as tecnologias de monitoramento, governança e qualidade.
+
+- Relato e apresentação
+
+— Critério: Qualidade da escrita, organização, clareza da apresentação e domínio do conteúdo.
+
+— Nota: 2,0/2,0
+
+Total: 7,5/10,0 (MS)

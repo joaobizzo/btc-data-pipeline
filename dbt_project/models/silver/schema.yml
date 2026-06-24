@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: silver_prices
+    description: "Tabela contendo os preços normalizados e limpos do Bitcoin em USD e BRL, com o cálculo do câmbio implícito USD/BRL."
+    columns:
+      - name: price_timestamp
+        description: "Data e hora em UTC correspondente ao preço."
+        tests:
+          - unique
+          - not_null
+      - name: btc_usd
+        description: "Cotação do Bitcoin em dólares (USD)."
+        tests:
+          - not_null
+      - name: btc_brl
+        description: "Cotação do Bitcoin em reais (BRL)."
+        tests:
+          - not_null
+      - name: usd_brl
+        description: "Taxa de câmbio implícita calculada (BRL/USD)."
+        tests:
+          - not_null
+      - name: source
+        description: "Origem do dado (coingecko_realtime ou coingecko_historical)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['coingecko_realtime', 'coingecko_historical']
+      - name: collected_at
+        description: "Data e hora em UTC em que a coleta foi registrada no banco."
+        tests:
+          - not_null

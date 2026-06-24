@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_TASK",
+  "summary": "Lista de tarefas a executar para implementar o BTC Data Pipeline com Docker, Airflow, dbt e Streamlit.",
+  "updatedAt": "2026-06-23T20:09:40.996238906Z"
+}

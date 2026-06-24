@@ -1,0 +1,36 @@
+# Variáveis de Ambiente e Segredos
+.env
+.env.local
+.env.*.local
+
+# Ambientes Virtuais Python
+.venv/
+venv/
+ENV/
+env/
+build/
+dist/
+*.egg-info/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# dbt (Data Build Tool)
+target/
+dbt_packages/
+dbt_modules/
+logs/
+*.log
+
+# Docker e Logs de Sistemas
+*.log
+docker-compose.override.yml
+.airflow_uid
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+*.swp

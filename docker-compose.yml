@@ -1,0 +1,126 @@
+version: '3.8'
+
+x-airflow-common: &airflow-common
+  build:
+    context: .
+    dockerfile: Dockerfile.airflow
+  environment:
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW_FERNET_KEY:-46b858c6e2645f782f254b8d7859c042}
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+    - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/logs
+    # Variáveis da Pipeline
+    - POSTGRES_USER=${POSTGRES_USER}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - POSTGRES_DB=${POSTGRES_DB}
+    - POSTGRES_HOST=${POSTGRES_HOST}
+    - POSTGRES_PORT=${POSTGRES_PORT}
+    - COINGECKO_BASE_URL=${COINGECKO_BASE_URL:-https://api.coingecko.com/api/v3}
+    - COINGECKO_API_KEY=${COINGECKO_API_KEY}
+    - DBT_PROFILES_DIR=/opt/airflow/dbt_project
+    # PYTHONPATH para garantir que o Airflow encontre o código do src
+    - PYTHONPATH=/opt/airflow
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./src:/opt/airflow/src
+    - ./dbt_project:/opt/airflow/dbt_project
+    - airflow_logs:/opt/airflow/logs
+  user: "${AIRFLOW_UID:-1000}:0"
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  # ==============================================================================
+  # Banco de Dados PostgreSQL (Armazenamento Principal e Metadados do Airflow)
+  # ==============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: btc_postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres_password}
+      - POSTGRES_DB=${POSTGRES_DB:-btc_pipeline}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  # ==============================================================================
+  # Inicializador do Banco do Airflow (Roda uma única vez)
+  # ==============================================================================
+  airflow-init:
+    <<: *airflow-common
+    container_name: btc_airflow_init
+    command: >
+      bash -c "airflow db init &&
+      airflow users create --username admin --password admin --firstname Admin --lastname Admin --role Admin --email admin@example.com"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ==============================================================================
+  # Webserver do Airflow (Interface Gráfica na porta 8080)
+  # ==============================================================================
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: btc_airflow_webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  # ==============================================================================
+  # Scheduler do Airflow (Orquestrador que agenda as DAGs)
+  # ==============================================================================
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: btc_airflow_scheduler
+    command: scheduler
+    restart: always
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  # ==============================================================================
+  # Dashboard Analítico (Streamlit)
+  # ==============================================================================
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: btc_streamlit
+    ports:
+      - "${STREAMLIT_SERVER_PORT:-8501}:8501"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - COINGECKO_BASE_URL=${COINGECKO_BASE_URL:-https://api.coingecko.com/api/v3}
+      - COINGECKO_API_KEY=${COINGECKO_API_KEY}
+      - DBT_PROFILES_DIR=/app/dbt_project
+    volumes:
+      - ./src:/app/src
+      - ./dbt_project:/app/dbt_project
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  postgres_data:
+  airflow_logs:
