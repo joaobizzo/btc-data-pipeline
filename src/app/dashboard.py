@@ -223,8 +223,12 @@ if df_silver is None or df_silver.empty:
                     ["dbt", "run", "--project-dir", dbt_path, "--profiles-dir", dbt_path],
                     capture_output=True, text=True
                 )
-                st.success("Ingestão e transformação completadas! Recarregue a página.")
-                st.code(result.stdout[:500])
+                if result.returncode == 0:
+                    st.success("Ingestão e transformação completadas! Recarregue a página (pressione F5 ou R).")
+                    st.code(result.stdout)
+                else:
+                    st.error("Falha no dbt run!")
+                    st.code(result.stdout + "\n" + result.stderr)
             except Exception as ex:
                 st.exception(ex)
     st.stop()
@@ -436,10 +440,10 @@ elif menu == "🛡️ Monitoramento e Qualidade":
                     )
                     if result.returncode == 0:
                         st.success("dbt run executado com SUCESSO!")
-                        st.code(result.stdout[-1000:])
+                        st.code(result.stdout)
                     else:
                         st.error("Falha no dbt run!")
-                        st.code(result.stderr or result.stdout)
+                        st.code("STDOUT:\n" + result.stdout + "\nSTDERR:\n" + result.stderr)
                 except Exception as ex:
                     st.error(f"Erro ao disparar dbt: {ex}")
 
