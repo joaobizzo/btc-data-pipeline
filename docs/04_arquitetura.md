@@ -12,11 +12,11 @@ A arquitetura do **BTC Data Pipeline** baseia-se no padrão **Medalhão** (Bronz
 *   **Quarentena:** Registros inválidos ou corrompidos são direcionados para a tabela `bronze.quarantine` com a descrição do erro de validação. Isso impede a poluição das camadas analíticas e permite auditoria posterior (governança).
 
 ### B. Camada de Integração e Enriquecimento (Silver)
-*   Os dados válidos são limpos, os timestamps Unix são convertidos para o padrão UTC (ISO-8601) e inseridos na tabela `silver.normalized_prices`.
+*   Os dados válidos são limpos, os timestamps Unix são convertidos para o padrão UTC (ISO-8601) e inseridos na tabela `silver.silver_prices`.
 *   Nessa camada é calculado o câmbio implícito USD/BRL e inserido de forma estruturada.
 
 ### C. Camada Analítica e Agregações (Gold)
-*   Executada via dbt, essa camada lê de `silver.normalized_prices` e constrói views ou tabelas incrementais agrupadas por granularidade (2h, 4h e Diária) para consumo, resolvendo o problema de otimização de custo e performance de séries históricas longas.
+*   Executada via dbt, essa camada lê de `silver.silver_prices` e constrói views ou tabelas incrementais agrupadas por granularidade (2h, 4h e Diária) para consumo, resolvendo o problema de otimização de custo e performance de séries históricas longas.
 
 ### D. Camada de Consumo (Serving)
 *   **Dashboard Streamlit:** Consome diretamente da camada Gold e Silver do PostgreSQL para apresentar análises de preços e câmbio aos investidores.
@@ -27,7 +27,7 @@ A arquitetura do **BTC Data Pipeline** baseia-se no padrão **Medalhão** (Bronz
 ## 🔄 Mecanismos de Retroalimentação (Caminho não-feliz)
 
 1.  **Exponential Backoff na Ingestão:** Se a API da CoinGecko retornar erro `429 (Too Many Requests)` ou falha de conexão, o coletor aplica tentativas de reenvio exponenciais antes de desistir.
-2.  **Detecção de Lacunas (Gap Detector):** Periodicamente, o dbt ou uma tarefa específica do Airflow executa uma verificação na tabela `silver.normalized_prices` buscando saltos incomuns de tempo na série temporal.
+2.  **Detecção de Lacunas (Gap Detector):** Periodicamente, o dbt ou uma tarefa específica do Airflow executa uma verificação na tabela `silver.silver_prices` buscando saltos incomuns de tempo na série temporal.
 3.  **Backfill Automático (Retroalimentação):** Caso lacunas sejam detectadas (ex: devido a queda prolongada de internet local ou indisponibilidade da API), a pipeline de Backfill Histórico é disparada programaticamente para buscar os dados faltantes do período exato no endpoint `/market_chart`.
 
 ---
@@ -69,7 +69,7 @@ graph TD
         end
 
         subgraph SILVER_SCHEMA ["Schema: silver (Normalized)"]
-            T_SILVER[normalized_prices]
+            T_SILVER[silver_prices]
         end
 
         subgraph GOLD_SCHEMA ["Schema: gold (Aggregated)"]

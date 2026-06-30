@@ -42,7 +42,7 @@ graph TD
         end
 
         subgraph SILVER_SCHEMA ["Schema: silver (Normalized)"]
-            T_SILVER[(normalized_prices)]
+            T_SILVER[(silver_prices)]
         end
 
         subgraph GOLD_SCHEMA ["Schema: gold (Aggregated)"]
@@ -190,4 +190,4 @@ Para validar o funcionamento dos mecanismos de qualidade e retroalimentação na
 1.  **Simular Erros de Qualidade de Dados:**
     Insira uma linha manualmente na tabela crua contendo dados inválidos (ex: preço negativo) e verifique se o pipeline de qualidade desvia o registro para a tabela `bronze.quarantine` e gera uma falha visual no dashboard de monitoramento.
 2.  **Simular Perda de Dados (Lacunas):**
-    Delete propositalmente registros da tabela `silver.normalized_prices` equivalentes a um período de 12 horas. Aguarde a execução horária da DAG `btc_auto_recovery` ou execute-a manualmente no Airflow. Ela detectará a lacuna na série temporal e disparará a DAG de Backfill para preencher automaticamente o buraco na base de dados (autocura).
+    Delete propositalmente registros da tabela `silver.silver_prices` equivalentes a um período de 12 horas. Aguarde a execução horária da DAG `btc_auto_recovery` ou execute-a manualmente no Airflow. Ela detectará a lacuna na série temporal e disparará a DAG de Backfill para preencher automaticamente o buraco na base de dados (autocura).

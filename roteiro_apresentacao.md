@@ -1,76 +1,73 @@
 # 🪙 Roteiro de Apresentação: Prova 2 - BTC Data Pipeline
 
-Este guia foi elaborado com base nos critérios de avaliação da **2ª Avaliação (Menção Parcial 2)** para ajudá-lo a conduzir uma apresentação fluida, técnica e segura perante o professor. Ele descreve o que falar, o que mostrar e como defender as decisões de engenharia adotadas.
+Este guia foi elaborado com base nos critérios de avaliação da **2ª Avaliação (Menção Parcial 2)** para ajudá-los a conduzir uma apresentação fluida, técnica e segura perante o professor, dividindo de forma clara as falas e demonstrações de cada integrante.
 
 ---
 
-## ⏱️ Divisão do Tempo Sugerida (Total: ~10 a 12 minutos)
+## ⏱️ Divisão de Falas e Tempo (Total: ~10 a 12 minutos)
 
-1.  **Introdução e Domínios de Negócio** (2 minutos)
-2.  **Arquitetura "As-Built" e Evolução (Feedbacks Prova 1)** (3 minutos)
-3.  **Demonstração Prática do Pipeline e dos Containers** (5 minutos)
-4.  **Conclusão e Defesa das Escolhas Técnicas** (2 minutos)
-
----
-
-## 1. Introdução e Domínios de Negócio (O quê e Porquê)
-*   **Abertura:** Apresente-se (João Bizzo e Pietra Paz) e apresente o projeto: *BTC Data Pipeline – Monitoramento Inteligente de Preços de Bitcoin*.
-*   **O Problema de Negócio:** Investidores de criptoativos precisam balancear a visualização de dados históricos de longo prazo com alta resolução recente para tomar decisões de compra/venda. Porém, armazenar tudo em alta frequência gera custos excessivos.
-*   **Solução:** Um pipeline em camadas lógicas (Medalhão) que faz o *downsampling* (agregação temporal) inteligente de preços do Bitcoin (coletados via CoinGecko) e calcula taxas de câmbio implícitas.
-*   **Correção de Domínios (Feedback P1):** Explique ao professor que na Prova 1 os domínios estavam acoplados às etapas do pipeline. Agora, foram organizados por **domínios de negócio/conhecimento**:
-    1.  *Inteligência de Mercado Cripto* (coleta, resiliência na API e auditoria Bronze);
-    2.  *Conversão Cambial* (cálculo de câmbio implícito BRL/USD sem dependência de APIs externas);
-    3.  *Métricas e Analytics Temporal* (validação de qualidade, agregação e autocura);
-    4.  *Portfólio e Consumo* (dashboard analítico Streamlit).
+| Tópico | Duração | Apresentador Principal | O que Fazer / Mostrar |
+| :--- | :---: | :---: | :--- |
+| **1. Introdução e Domínios** | 2 min | **João** | Contextualização do negócio e novos domínios. |
+| **2. Arquitetura "As-Built"** | 3 min | **Pietra** | Explicação técnica do diagrama e caminhos não-felizes. |
+| **3. Demonstração: BD e Airflow** | 3 min | **João** | Mostrar schemas Postgres e disparar DAG de Backfill. |
+| **4. Demonstração: Streamlit** | 2 min | **Pietra** | Mostrar gráficos, granularidades Gold e quarentena. |
+| **5. Defesa e Perguntas (Q&A)** | 2 min | **Ambos** | Responder às arguições técnicas do professor. |
 
 ---
 
-## 2. Arquitetura "As-Built" e Evolução (Como foi feito)
-*   **Abra o [README.md](file:///home/joaobizzo/Documents/CEUB/8sem/eng%20Dados/btc-data-pipeline/README.md)** e mostre o diagrama Mermaid atualizado.
-*   **Explique o Fluxo de Dados Ponta a Ponta:**
-    *   **Ingestão (Bronze):** Coleta em Python (Requests) e persistência do JSON bruto nas tabelas `raw_realtime` e `raw_historical`.
-    *   **Qualidade e Quarentena:** Antes da inserção, os dados passam por uma barreira de qualidade em Python. Dados corrompidos (ex: preços negativos ou nulos) são desviados para a tabela `quarantine`.
-    *   **Normalização (Silver):** O dbt limpa o JSON, padroniza os timestamps para UTC, calcula a taxa de câmbio implícita e grava em `silver.normalized_prices`.
-    *   **Agregações (Gold):** O dbt gera agregações em janelas temporais de **2h**, **4h** e **Diário** (tabelas da camada Gold).
-    *   **Consumo (Serving):** Dashboard Streamlit interativo e logs de auditoria expostos ao usuário.
-*   **Destaque os Mecanismos de Retroalimentação (Caminho não-feliz):**
-    1.  *Resiliência de API:* Uso de *exponential backoff* (via biblioteca `tenacity`) para contornar bloqueios por rate limit (HTTP 429).
-    2.  *Loop de Autocura (Gap Detector):* O script `gap_detector.py` monitora o banco em busca de lacunas na série temporal. Ao detectar um gap maior que 4 horas, ele dispara automaticamente a DAG de Backfill Histórico para recuperar os dados perdidos.
+## 🎤 1. Introdução e Domínios de Negócio (Apresentador: João)
+*   **Abertura:** Apresente a equipe (João e Pietra) e o nome do projeto: *BTC Data Pipeline – Monitoramento Inteligente de Preços de Bitcoin*.
+*   **O Problema de Negócio:** Investidores precisam de dados históricos longos (para análises de tendência) mas também dados recentes de alta resolução. Salvar tudo com alta frequência estouraria o armazenamento. A solução é coletar dados em tempo real e aplicar agregações de série temporal (*downsampling*).
+*   **A Evolução dos Domínios (Feedback da Prova 1):** Explique que na P1 os domínios eram apenas etapas do pipeline. Agora, reestruturamos de acordo com **domínios de conhecimento de negócio**:
+    1.  *Inteligência de Mercado Cripto:* Lida com a API CoinGecko e garante a ingestão Bronze.
+    2.  *Conversão Cambial:* Calcula o câmbio implícito BRL/USD usando a paridade de mercado do Bitcoin, sem depender de APIs de moedas externas.
+    3.  *Métricas e Analytics Temporal:* Aplica qualidade de dados, quarentena e agregações.
+    4.  *Portfólio e Consumo:* Serve os dados para as interfaces visuais.
 
 ---
 
-## 3. Demonstração Prática (O que abrir e mostrar na tela)
+## 🎤 2. Arquitetura "As-Built" e Resiliência (Apresentadora: Pietra)
+*   **Exibição do Diagrama:** Abra o [README.md](file:///home/joaobizzo/Documents/CEUB/8sem/eng%20Dados/btc-data-pipeline/README.md) na seção do diagrama Mermaid e explique o fluxo:
+    *   **Ingestão & Qualidade:** Os coletores Python gravam no schema `bronze` (`raw_realtime` e `raw_historical`). Se falhar na qualidade (preço negativo, nulos), vai para a tabela `quarantine`.
+    *   **Normalização & Agregação:** O dbt limpa, calcula o câmbio implícito e grava na tabela `silver.silver_prices`. Em seguida, cria as visões da camada `gold` agrupadas em 2h, 4h e Diária.
+*   **Caminho Não-Feliz e Retroalimentações:**
+    1.  *Tenacity (Exponential Backoff):* Tratamento contra rate-limit (HTTP 429) no cliente Python.
+    2.  *Gap Detector (Autocura):* O Airflow roda uma tarefa horária que detecta lacunas na tabela `silver.silver_prices` (ex: queda de rede local) e dispara programaticamente a DAG de Backfill corretiva para recuperar o histórico perdido.
 
-Para obter a nota máxima em **Funcionalidade e Operacionalidade**, abra os seguintes serviços locais na hora da apresentação:
+---
 
-### A. O Banco de Dados (PostgreSQL)
-*   *Onde abrir:* Um cliente SQL de sua preferência (ex: DBeaver, pgAdmin) ou via linha de comando no container.
+## 🖥️ 3. Demonstração Prática: BD e Orquestração (Apresentador: João)
+
+*   **A. O Banco de Dados (PostgreSQL):**
+    *   *O que abrir:* DBeaver, pgAdmin ou terminal.
+    *   *O que mostrar:* Mostre os quatro schemas estruturados no banco `btc_pipeline`: `bronze`, `silver`, `gold` e `monitoring`. Aponte a tabela `bronze.quarantine` como exemplo de governança e isolamento de dados ruins.
+*   **B. A Orquestração (Apache Airflow):**
+    *   *O que abrir:* Navegador em [http://localhost:8080](http://localhost:8080) (usuário `admin` / senha `admin`).
+    *   *O que mostrar:*
+        1.  DAG `btc_ingestion_and_transform` (coleta realtime + dbt run/test a cada 5 min).
+        2.  DAG `btc_auto_recovery` (verificador de gaps horários).
+        3.  DAG `btc_historical_backfill` (backfill manual). **Clique em "Trigger DAG" em tempo real** para o professor ver os containers rodando o `dbt run` com sucesso.
+
+---
+
+## 🖥️ 4. Demonstração Prática: Dashboard (Apresentadora: Pietra)
+
+*   *O que abrir:* Navegador em [http://localhost:8501](http://localhost:8501).
 *   *O que mostrar:*
-    *   Os quatro schemas estruturados no banco `btc_pipeline`: `bronze`, `silver`, `gold` e `monitoring`.
-    *   Destaque a tabela `bronze.quarantine` e comente: *"Se a CoinGecko enviar um dado inválido, ele não quebra o dashboard, ele é isolado aqui para governança."*
-
-### B. A Orquestração (Apache Airflow)
-*   *Onde abrir:* Navegador em [http://localhost:8080](http://localhost:8080) (usuário `admin` / senha `admin`).
-*   *O que mostrar:*
-    *   As 3 DAGs ativas e configuradas em código:
-        1.  `btc_ingestion_and_transform`: Mostre que ela roda a cada 5 minutos, captura o dado brut, aciona o `dbt run` e executa o `dbt test` para validar o schema.
-        2.  `btc_historical_backfill`: DAG manual. Clique em *Trigger DAG* para mostrar ao professor uma carga histórica em lote rodando em tempo real.
-        3.  `btc_auto_recovery`: Mostre o código ou gráfico explicativo do detector de gaps (loop de retroalimentação horária).
-
-### C. A Interface de Consumo e Monitoramento (Streamlit)
-*   *Onde abrir:* Navegador em [http://localhost:8501](http://localhost:8501).
-*   *O que mostrar:*
-    *   **Aba 1 (Cotações):** Mostre as cotações em USD e BRL e o cálculo do dólar implícito gerado a partir do Bitcoin. Mostre que os gráficos Plotly são interativos.
-    *   **Aba 2 (Granularidades Gold):** Mostre os dados consolidados de 2h, 4h e diários. Aponte a área sombreada do gráfico que ilustra a volatilidade (Preço Médio vs Máximo e Mínimo).
-    *   **Aba 3 (Monitoramento e Qualidade):** Mostre as métricas executivas de saúde da pipeline (quantidade de execuções de sucesso/falha) e a listagem em tempo real da tabela `pipeline_logs` e `quarantine`.
+    *   **Aba 1 (Cotações):** Mostre as métricas de preço e o dólar implícito calculado. Mostre a interatividade dos gráficos Plotly.
+    *   **Aba 2 (Granularidades Gold):** Mostre os dados da Gold agrupados em 2h, 4h ou diário. Explique a faixa cinza de volatilidade (Preço Médio, Máximo e Mínimo).
+    *   **Aba 3 (Monitoramento e Qualidade):** Mostre os logs operacionais da tabela `monitoring.pipeline_logs` provando o registro das tarefas e a tabela da Quarentena zerada (ou com registros, se simulou erro).
 
 ---
 
-## 4. Defesa e Perguntas Frequentes (Perguntas que o professor pode fazer)
+## 🛡️ 5. Defesa e Perguntas Frequentes (Ambos)
 
-*   **P: Por que usar o Streamlit em vez do Metabase (que estava no planejamento original)?**
-    *   *Defesa:* O Metabase exige a criação e configuração manual de painéis em runtime, o que dificulta o versionamento do layout do dashboard no Git. Com o Streamlit, toda a aplicação, gráficos e consultas SQL são codificados em Python, permitindo que a interface seja 100% versionada e transportada de forma transparente entre máquinas (portabilidade).
-*   **P: Por que usar dbt se poderíamos fazer tudo em Pandas/Python?**
-    *   *Defesa:* O dbt padroniza o processamento SQL dentro da própria base de dados (ELT), otimizando a performance. Além disso, ele gerencia automaticamente a DDL (não precisamos escrever `CREATE TABLE` manuais) e provê testes integrados de qualidade de dados (`dbt test`) e documentação de linhagem sem esforço adicional.
-*   **P: O que acontece se a internet cair durante a execução de 5 minutos?**
-    *   *Defesa:* O script de ingestão possui retentativas com backoff exponencial. Se a queda for prolongada, a DAG falhará e registrará o status `FAILURE` na tabela de logs de monitoramento. Quando a conexão retornar, o detector de lacunas (`btc_auto_recovery`) identificará o gap na série temporal na próxima execução e disparará o backfill automático do período faltante, restabelecendo a consistência histórica sem intervenção manual.
+Esteja preparado para dividir a defesa se o professor arguir:
+
+*   **P: Por que usar o Streamlit em vez do Metabase (planejado na Prova 1)? (Defesa: Pietra)**
+    *   *Resposta:* O Streamlit permite escrever a interface inteiramente em código Python. Isso possibilita que o dashboard seja 100% versionado no Git (diferente do Metabase, cujos painéis são criados via cliques e exigem exportação de bases de dados internas). Isso garante total portabilidade ao projeto.
+*   **P: Por que usar dbt em vez de scripts Python/Pandas convencionais? (Defesa: João)**
+    *   *Resposta:* O dbt realiza o processamento diretamente dentro do banco de dados (ELT), otimizando performance. Ele também gerencia DDLs e chaves automaticamente, oferece testes nativos (`dbt test`) para restrições de qualidade de dados e documenta a linhagem dos dados de forma automatizada.
+*   **P: Como o pipeline reage se a máquina host perder internet? (Defesa: Pietra)**
+    *   *Resposta:* O script de ingestão tentará reconectar com backoff exponencial. Se o tempo for longo, a tarefa falhará. Ao retornar a conexão, a DAG `btc_auto_recovery` detectará o buraco temporal na tabela `silver.silver_prices` na sua execução seguinte e disparará o backfill do intervalo exato da falha, auto-curando o banco.
