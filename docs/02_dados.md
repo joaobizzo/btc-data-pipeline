@@ -1,19 +1,19 @@
-# 📊 Definição e Classificação dos Dados
+# Definição e Classificação dos Dados
 
 ## Fontes de Dados
 
-O projeto utiliza a API pública da :contentReference[oaicite:0]{index=0} para obtenção de dados de mercado relacionados ao Bitcoin.
+O projeto utiliza a API pública da CoinGecko para obtenção de dados de mercado relacionados ao Bitcoin.
 
 A arquitetura de ingestão utiliza duas estratégias complementares:
 
 - ingestão contínua de baixa latência
-- ingestão histórica para reconstrução e backfill
+- Ingestão histórica para reconstrução e backfill
 
 Essa separação permite maior resiliência e recuperação automática de dados perdidos.
 
 ---
 
-## 🔹 Dados em Tempo Real (Ingestão Contínua)
+## Dados em Tempo Real (Ingestão Contínua)
 
 Endpoint:
 
@@ -50,7 +50,7 @@ Coletar preços atuais do Bitcoin em intervalos regulares para alimentar o pipel
 
 ---
 
-## 🔹 Dados Históricos e Backfill
+## Dados Históricos e Backfill
 
 Endpoint:
 
@@ -129,7 +129,7 @@ Dados coletados continuamente para atualização recente do sistema.
 
 ### Frequência planejada
 
-* 2 horas → 12 entadas por dia
+* 2 horas → 12 entradas por dia
 
 ### Objetivo
 
@@ -141,9 +141,9 @@ Manter maior granularidade em períodos recentes e reduzir volume em períodos a
 
 O projeto utiliza uma arquitetura baseada no padrão Medalhão:
 
-* 🥉 Bronze → dados brutos
-* 🥈 Silver → dados tratados e normalizados
-* 🥇 Gold → dados analíticos e agregados (implementação futura)
+* Bronze -> dados brutos
+* Silver -> dados tratados e normalizados
+* Gold -> dados analíticos e agregados (implementação futura)
 
 Essa abordagem melhora:
 
@@ -154,7 +154,7 @@ Essa abordagem melhora:
 
 ---
 
-# 🥉 Camada Bronze (RAW)
+# Camada Bronze (RAW)
 
 ## Objetivo
 
@@ -216,7 +216,7 @@ A camada Bronze funciona como:
 
 ---
 
-# 🥈 Camada Silver (Dados Tratados)
+# Camada Silver (Dados Tratados)
 
 ## Objetivo
 
@@ -244,9 +244,9 @@ A partir dos dados Bronze:
 
 ---
 
-## 💱 Cálculo do câmbio implícito
+## Cálculo do câmbio implícito
 
-USD_BRL = \frac{BTC_BRL}{BTC_USD}
+USD_BRL = BTC_BRL / BTC_USD
 
 ---
 
@@ -306,7 +306,7 @@ Ao invés de consumir uma API adicional de câmbio, o projeto calcula a taxa USD
 
 O pipeline utiliza duas estratégias complementares:
 
-## ⚡ Ingestão Contínua
+## Ingestão Contínua
 
 Utiliza `/simple/price` para:
 
@@ -331,4 +331,3 @@ Essa abordagem se aproxima conceitualmente de uma arquitetura Lambda simplificad
 * camada de velocidade (speed layer)
 * camada histórica (batch layer)
 * camada de consumo analítico
-

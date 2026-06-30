@@ -1,4 +1,4 @@
-# 🛠️ Justificativa e Seleção das Tecnologias
+# Justificativa e Seleção das Tecnologias
 
 A escolha das tecnologias para a implementação do **BTC Data Pipeline** baseou-se em critérios de robustez, adoção de mercado, capacidade de execução local em ambientes de desenvolvimento (notebooks) e suporte nativo às boas práticas de Engenharia de Dados.
 

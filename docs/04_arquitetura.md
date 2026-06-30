@@ -1,4 +1,4 @@
-# 🏗️ Arquitetura e Fluxo de Dados "As-Built"
+# Arquitetura e Fluxo de Dados "As-Built"
 
 A arquitetura do **BTC Data Pipeline** baseia-se no padrão **Medalhão** (Bronze, Silver e Gold), estendida para suportar fluxos de resiliência, qualidade de dados, monitoramento e retroalimentação automática (caminho não-feliz).
 
@@ -24,7 +24,7 @@ A arquitetura do **BTC Data Pipeline** baseia-se no padrão **Medalhão** (Bronz
 
 ---
 
-## 🔄 Mecanismos de Retroalimentação (Caminho não-feliz)
+## Mecanismos de Retroalimentação (Caminho não-feliz)
 
 1.  **Exponential Backoff na Ingestão:** Se a API da CoinGecko retornar erro `429 (Too Many Requests)` ou falha de conexão, o coletor aplica tentativas de reenvio exponenciais antes de desistir.
 2.  **Detecção de Lacunas (Gap Detector):** Periodicamente, o dbt ou uma tarefa específica do Airflow executa uma verificação na tabela `silver.silver_prices` buscando saltos incomuns de tempo na série temporal.
@@ -32,14 +32,14 @@ A arquitetura do **BTC Data Pipeline** baseia-se no padrão **Medalhão** (Bronz
 
 ---
 
-## 📊 Monitoramento e Governança
+## Monitoramento e Governança
 
 *   **Tabela de Logs (`monitoring.pipeline_logs`):** Registra cada execução das tarefas (início, fim, status - SUCESSO/FALHA, quantidade de linhas inseridas, quantidade de falhas de qualidade e logs de erro).
 *   **Governança de Dados:** Definição de propriedade de dados e dicionário estruturado. A linhagem do dado é controlada e versionada pelo dbt, garantindo que toda transformação de código seja auditável.
 
 ---
 
-## 🗺️ Diagrama de Arquitetura Detalhado
+## Diagrama de Arquitetura Detalhado
 
 ```mermaid
 graph TD

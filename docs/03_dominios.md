@@ -1,4 +1,4 @@
-# 🏢 Domínios e Serviços de Negócio
+# Domínios e Serviços de Negócio
 
 Para corrigir o acoplamento conceitual entre etapas técnicas do pipeline e domínios de negócio, redefinimos os limites organizacionais do projeto com base em **Domínios de Negócio e Conhecimento**. Cada domínio possui responsabilidades funcionais bem delineadas.
 
@@ -38,11 +38,11 @@ Responsável por expor informações prontas para o consumo de stakeholders inte
 
 ---
 
-## 🗺️ Diagrama de Domínios e Serviços de Negócio
+## Diagrama de Domínios e Serviços de Negócio
 
 ```mermaid
 graph TB
-    subgraph DOM_MARKET ["Domínio: Inteligência de Mercado Cripto"]
+    subgraph DOM_MARKET ["Domínio: Ingestão de Mercado"]
         S1["Serviço de Captura Contínua (Real-time)"]
         S2["Serviço de Sincronização Histórica (Backfill)"]
         S3["Serviço de Auditoria Raw (Bronze)"]
