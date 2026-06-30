@@ -23,6 +23,8 @@ dbt_packages/
 dbt_modules/
 logs/
 *.log
+.user.yml
+*.user.yml
 
 # Docker e Logs de Sistemas
 *.log
