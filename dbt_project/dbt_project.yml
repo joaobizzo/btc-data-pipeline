@@ -14,12 +14,7 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 clean-targets:
-  - "/tmp/dbt/target"
   - "dbt_packages"
-
-# Configuração de caminhos de escrita em /tmp (para evitar erros de permissão de escrita em volumes Docker)
-target-path: "/tmp/dbt/target"
-log-path: "/tmp/dbt/logs"
 
 # Configuração de materialização e esquemas de banco por pasta
 models:

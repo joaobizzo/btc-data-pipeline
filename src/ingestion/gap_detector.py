@@ -20,7 +20,7 @@ def detect_gaps_and_recover() -> bool:
         cur = conn.cursor()
         
         # 1. Verifica se a tabela está vazia (bootstrap)
-        cur.execute("SELECT COUNT(*) FROM silver.normalized_prices;")
+        cur.execute("SELECT COUNT(*) FROM silver.silver_prices;")
         count = cur.fetchone()[0]
         
         if count == 0:
@@ -38,7 +38,7 @@ def detect_gaps_and_recover() -> bool:
             SELECT 
                 price_timestamp,
                 LEAD(price_timestamp) OVER (ORDER BY price_timestamp) AS next_timestamp
-            FROM silver.normalized_prices
+            FROM silver.silver_prices
             WHERE price_timestamp >= CURRENT_TIMESTAMP - INTERVAL '7 days'
         )
         SELECT 

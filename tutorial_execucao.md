@@ -74,6 +74,6 @@ Durante a apresentação, você pode abrir os seguintes endereços para provar q
         ```
     *   Para ver os dados estruturados pelo dbt:
         ```sql
-        SELECT * FROM silver.normalized_prices LIMIT 10;
+        SELECT * FROM silver.silver_prices LIMIT 10;
         SELECT * FROM gold.prices_aggregated_2h LIMIT 10;
         ```

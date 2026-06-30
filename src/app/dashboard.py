@@ -94,7 +94,7 @@ def fetch_silver_prices():
         conn = get_connection()
         query = """
         SELECT price_timestamp, btc_usd, btc_brl, usd_brl, source, collected_at
-        FROM silver.normalized_prices
+        FROM silver.silver_prices
         ORDER BY price_timestamp DESC
         LIMIT 1000;
         """
@@ -204,7 +204,7 @@ st.subheader("Ciclo de Vida de Engenharia de Dados - Monitoramento de Preços do
 df_silver = fetch_silver_prices()
 
 if df_silver is None or df_silver.empty:
-    st.error("⚠️ Não foi possível conectar ao banco de dados ou a tabela 'silver.normalized_prices' está vazia.")
+    st.error("⚠️ Não foi possível conectar ao banco de dados ou a tabela 'silver.silver_prices' está vazia.")
     st.info(
         "**Como inicializar o projeto?**\n"
         "1. Certifique-se de que os containers Docker estão rodando: `docker-compose up -d`\n"
