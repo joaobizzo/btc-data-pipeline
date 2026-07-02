@@ -1,6 +1,0 @@
-{
-  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Plano de implementação detalhado para a Prova 2 do projeto BTC Data Pipeline, descrevendo a arquitetura a ser implementada, tecnologias propostas, tratamento dos feedbacks da Prova 1 e plano de testes/validação.",
-  "updatedAt": "2026-06-23T19:59:06.656306212Z",
-  "requestFeedback": true
-}
